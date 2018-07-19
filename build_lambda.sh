@@ -19,17 +19,27 @@ lambda_output_file=/opt/app/build/lambda.zip
 set -e
 
 yum update -y
-yum install -y cpio python27-pip zip
+yum install -y cpio python zip wget 
+curl -O https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
 pip install --no-cache-dir virtualenv
 virtualenv env
 . env/bin/activate
 pip install --no-cache-dir -r requirements.txt
 
 pushd /tmp
-yumdownloader -x \*i686 --archlist=x86_64 clamav clamav-lib clamav-update
-rpm2cpio clamav-0*.rpm | cpio -idmv
-rpm2cpio clamav-lib*.rpm | cpio -idmv
-rpm2cpio clamav-update*.rpm | cpio -idmv
+wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -ivh epel-release-latest-7.noarch.rpm
+yum -y update
+yum clean all
+yum install -y clamav clamav-lib clamav-update
+rpm -qa
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/c/clamav-0.100.0-2.el7.x86_64.rpm
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/c/clamav-lib-0.100.0-2.el7.x86_64.rpm
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/c/clamav-update-0.100.0-2.el7.x86_64.rpm
+rpm2cpio clamav-0.100.0-2.el7.x86_64.rpm | cpio -idmv
+rpm2cpio clamav-lib-0.100.0-2.el7.x86_64.rpm | cpio -idmv
+rpm2cpio clamav-update-0.100.0-2.el7.x86_64.rpm | cpio -idmv
 popd
 mkdir -p bin
 cp /tmp/usr/bin/clamscan /tmp/usr/bin/freshclam /tmp/usr/lib64/* bin/.
