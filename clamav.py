@@ -62,8 +62,10 @@ def upload_defs_to_s3(bucket, prefix, local_path):
 def update_defs_from_freshclam(path, library_path=""):
     create_dir(path)
     fc_env = os.environ.copy()
+    #if library_path:
+    #fc_env["LD_LIBRARY_PATH"] = "%s:%s" % (":".join(current_library_search_path()), CLAMAVLIB_PATH)
     if library_path:
-        fc_env["LD_LIBRARY_PATH"] = "%s:%s" % (":".join(current_library_search_path()), CLAMAVLIB_PATH)
+        fc_env["LD_LIBRARY_PATH"] = ":".join([CLAMAVLIB_PATH,'/var/task/lib'])
     print("Starting freshclam with defs in %s." % path)
     fc_proc = Popen(
         [
@@ -77,6 +79,7 @@ def update_defs_from_freshclam(path, library_path=""):
         env=fc_env
     )
     output = fc_proc.communicate()[0]
+    print(os.getcwd())
     print("freshclam output:\n%s" % output)
     if fc_proc.returncode != 0:
         print("Unexpected exit code from freshclam: %s." % fc_proc.returncode)
