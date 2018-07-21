@@ -1,0 +1,27 @@
+This package required compiling a special version of ClamAV for use on lambda
+
+Download the source for clam av
+sudo apt-get install libpcre2-dev
+cp /usr/lib/x86_64-linux-gnu/libpcre* /tmp/clamav_defs
+
+Build clamAV
+./configure -with-dbdir=/tmp/clamav_defs --libdir=/tmp/clamav_defs --with-pcre=/tmp/clamav_defs --disable-openssl --enable-newline-is-any --enable-utf --enable-unicode-properties --enable-pcre16 --enable-pcre32
+make && make install
+
+
+
+Run the build on this bucket AV
+sudo make
+
+in the fresh build directory lambda.zip will be there
+extract the bin directory from it
+
+copy the contents of the /tmp/clamav_defs folder into the bin directory
+copy the items from hard to find into the bin directory
+replace all symbolic links with actual files
+
+List of files should be
+
+
+
+

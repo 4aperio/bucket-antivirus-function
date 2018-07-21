@@ -29,16 +29,19 @@ def current_library_search_path():
 
 def update_defs_from_s3(bucket, prefix):
     create_dir(AV_DEFINITION_PATH)
+
     for filename in AV_DEFINITION_FILENAMES:
+        print(filename)
         s3_path = os.path.join(AV_DEFINITION_S3_PREFIX, filename)
         local_path = os.path.join(AV_DEFINITION_PATH, filename)
         s3_md5 = md5_from_s3_tags(bucket, s3_path)
         if os.path.exists(local_path) and md5_from_file(local_path) == s3_md5:
             print("Not downloading %s because local md5 matches s3." % filename)
             continue
-        if s3_md5:
+        else:
             print("Downloading definition file %s from s3://%s" % (filename, os.path.join(bucket, prefix)))
             s3.Bucket(bucket).download_file(s3_path, local_path)
+    print("Update Definition From S3 Completed")
 
 
 def upload_defs_to_s3(bucket, prefix, local_path):
@@ -119,14 +122,19 @@ def scan_file(path):
             "-v",
             "-a",
             "--stdout",
-            "-d",
-            AV_DEFINITION_PATH,
+            "--database=/tmp/clamav_defs",
             path
         ],
+        shell=True,
         stderr=STDOUT,
         stdout=PIPE,
         env=av_env
     )
+    #while True:
+    #        nextline = av_proc.stdout.readline()
+    #        if nextline == '' and av_proc.poll() is not None:
+    #            break
+    #        print(nextline)
     output = av_proc.communicate()[0]
     print("clamscan output:\n%s" % output)
     if av_proc.returncode == 0:
