@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=/tmp/clamav_defs
+includedir=${prefix}/include
+
+Name: libmspack
+Description: Compressors and decompressors for Microsoft formats
+Version: 0.5alpha
+Libs: -L${libdir} -lmspack
+Cflags: -I${includedir}
