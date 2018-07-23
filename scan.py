@@ -94,6 +94,15 @@ def set_av_tags(s3_object, result):
         Tagging={"TagSet": new_tags}
     )
 
+def del_infected_file(s3_object, result):
+    if result is "INFECTED":
+        s3_client.delete_object(
+            Bucket=s3_object.bucket_name,
+            Key=s3_object.key
+        )
+        print("Alert: File deleted due to infection!")
+
+
 def sns_start_scan(s3_object):
     if AV_SCAN_START_SNS_ARN is None:
         return
@@ -143,7 +152,8 @@ def lambda_handler(event, context):
     print("Scan of s3://%s resulted in %s\n" % (os.path.join(s3_object.bucket_name, s3_object.key), scan_result))
     if "AV_UPDATE_METADATA" in os.environ:
         set_av_metadata(s3_object, scan_result)
-    set_av_tags(s3_object, scan_result)
+    #set_av_tags(s3_object, scan_result)
+    del_infected_file(s3_object, scan_result)
     sns_scan_results(s3_object, scan_result)
     metrics.send(env=ENV, bucket=s3_object.bucket_name, key=s3_object.key, status=scan_result)
     # Delete downloaded file to free up room on re-usable lambda function container
