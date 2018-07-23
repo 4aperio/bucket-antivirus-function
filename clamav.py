@@ -116,7 +116,7 @@ def scan_file(path):
     av_env = os.environ.copy()
     av_env["LD_LIBRARY_PATH"] = CLAMAVLIB_PATH
     print("Starting clamscan of %s." % path)
-    print("Using clamscan at %s." %CLAMSCAN_PATH)
+    #print("Using clamscan at %s." %CLAMSCAN_PATH)
     command = " ".join([CLAMSCAN_PATH, "-v", "-a", "--stdout", "-d /tmp/clamav_defs", path])
     av_proc = Popen(
         [
@@ -132,8 +132,8 @@ def scan_file(path):
     #        if nextline == '' and av_proc.poll() is not None:
     #            break
     #        print(nextline)
-    cwd = os.getcwd()
-    print(cwd)
+    #cwd = os.getcwd()
+    #print(cwd)
     print("the commandline is {}".format(av_proc.args))
     output = av_proc.communicate()[0]
     print("clamscan output:\n%s" % output)
