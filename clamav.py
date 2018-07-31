@@ -117,7 +117,7 @@ def scan_file(path):
     av_env["LD_LIBRARY_PATH"] = CLAMAVLIB_PATH
     print("Starting clamscan of %s." % path)
     #print("Using clamscan at %s." %CLAMSCAN_PATH)
-    command = " ".join([CLAMSCAN_PATH, "-v", "-a", "--stdout", "-d /tmp/clamav_defs", path])
+    command = "".join([CLAMSCAN_PATH, " -v ", " -a ", " --stdout ", " -d /tmp/clamav_defs ", "\'", path, "\'"])
     av_proc = Popen(
         [
             command
