@@ -1,5 +1,5 @@
 # bucket-antivirus-function
-
+Note: this content has been modified for Aperio use and the below documentation may not be 100% accurate at this point in time.
 
 [![CircleCI](https://circleci.com/gh/upsidetravel/bucket-antivirus-function.svg?style=svg)](https://circleci.com/gh/upsidetravel/bucket-antivirus-function)
 
